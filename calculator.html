@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>My Calculator</title>
+
+	<!--style-->
+	<style>
+		table#pad {
+			border-radius: 24px 24px;
+		}
+		button.button {
+			position: relative;
+			padding: 2px 8px;
+			font-size: 32px;
+			border: none;
+			border-radius: 50px 50px;
+			background-color: #d6f5f5;
+			text-align: center;
+		}
+		button#squareRoot {
+			padding: 2px 10px;
+		}
+		button#clear, 
+		button#percent {
+			padding: 2px 18px;
+		}
+		button#six, 
+		button#three, 
+		button#nine, 
+		button#add, 
+		button#equals,
+		button#leftArrow,
+		button#rightArrow {
+			padding: 2px 20px;
+		}
+		button#five, 
+		button#eight {
+			padding: 2px 21px;
+		}
+		button#seven, 
+		button#four, 
+		button#subtract, 
+		button#two, 
+		button#zero, 
+		button#multiply {
+			padding: 2px 22px;
+		}
+		button#leftParethesis, 
+		button#rightParethesis, 
+		button#exponent, 
+		button#divide, 
+		button#one { 
+			padding: 2px 25px;
+		}
+		button#dot {
+			padding: 2px 27px;
+		}
+		button#mode {
+			padding: 2px 28px;
+		}
+		button.button:focus {
+			outline: none;
+		}
+		td#screen {
+			background-color: white;
+			border: 1px solid black;
+			border-radius: 23px 23px;
+		}
+		td.buttonContainer {
+			position: relative;
+			background-color: #d6f5f5;
+			border: 1px solid black;
+			border-radius: 50px 50px;
+		}
+		td.buttonContainer:hover {
+			border: 1px solid black;
+			box-shadow: 0px 0px 10px yellow;
+		}
+		table#pad {
+			position: relative;
+			background-color: #808080; /* grey variant */
+			text-align: center;
+			border: 1px solid black;
+			padding: 10px;
+		}
+		input {
+			border: none;
+		}
+		h1#result {
+			text-align: right;
+			font-size: 32px;
+		}
+		ul.numberSettings {
+			list-style-type: none;
+			text-align: left;
+		}
+		ul.numberSettings li {
+			display: inline;
+		}
+		div#calcUI {
+			float: left;
+		}
+		div#description {
+			width: 325px;
+			float: left;
+			padding: 20px;
+		}
+	</style>
+</head>
+
+<body>
+
+<!-- calculator UI -->
+<div id="calcUI">
+<table id="pad">
+<tr>
+<td colspan="4" id="appName">EZ-CALC</td>
+</tr>
+
+</tr>
+<tr>
+<td colspan="4" id="screen">
+	<!--
+	<ul class="numberSettings">
+		<li id="deg">deg</li>
+		<li id="rad"></li>
+		<li id="grad"></li>
+	</ul>
+	-->
+
+	<h1 id="result">0</h1> <!-- inputs and results goes here -->
+
+	<!--
+	<ul class="numberSettings">
+		<li id="dec">dec</li>
+		<li id="hex"></li>
+		<li id="bin"></li>
+		<li id="ipv4"></li>
+		<li id="ipv6"></li>
+	</ul>
+	-->
+</td>
+</tr>
+
+<tr>
+<td class="buttonContainer" colspan="2"><button class="button" id="mode">mode</button></td>
+<td class="buttonContainer"><button class="button" id="leftArrow"><</button></td>
+<td class="buttonContainer"><button class="button" id="rightArrow">></button></td>
+</tr>
+
+<tr>
+<td class="buttonContainer"><button class="button" id="squareRoot">sqt</button></td>
+<td class="buttonContainer"><button class="button" id="leftParethesis">(</button></td>
+<td class="buttonContainer"><button class="button" id="rightParethesis">)</button></td>
+<td class="buttonContainer"><button class="button" id="clear">C</button></td>
+</tr>
+
+<tr>
+<td class="buttonContainer"><button class="button" id="exponent">^</button></td>
+<td class="buttonContainer"><button class="button" id="percent">%</button></td>
+<td class="buttonContainer"><button class="button" id="delete">del</button></td>
+<td class="buttonContainer"><button class="button" id="divide">/</button></td>
+</tr>
+
+<tr>
+<td class="buttonContainer"><button class="button" id="seven">7</button></td>
+<td class="buttonContainer"><button class="button" id="eight">8</button></td>
+<td class="buttonContainer"><button class="button" id="nine">9</button></td>
+<td class="buttonContainer"><button class="button" id="multiply">*</button></td>
+</tr>
+
+<tr>
+<td class="buttonContainer"><button class="button" id="four">4</button></td>
+<td class="buttonContainer"><button class="button" id="five">5</button></td>
+<td class="buttonContainer"><button class="button" id="six">6</button></td>
+<td class="buttonContainer"><button class="button" id="subtract">-</button></td>
+</tr>
+
+<tr>
+<td class="buttonContainer"><button class="button" id="one">1</button></td>
+<td class="buttonContainer"><button class="button" id="two">2</button></td>
+<td class="buttonContainer"><button class="button" id="three">3</button></td>
+<td class="buttonContainer"><button class="button" id="add">+</button></td>
+</tr>
+
+<tr>
+<td class="buttonContainer"><button class="button" id="zero">0</button></td>
+<td class="buttonContainer"><button class="button" id="dot">.</button></td>
+<td class="buttonContainer"><button class="button" id="sign">+/-</button></td>
+<td class="buttonContainer"><button class="button" id="equals">=</button></td>
+</tr>
+</table>
+</div>
+
+
+<div id="description">
+<h1>Simple Calculator</h1>
+<h3>Project Description</h3>
+<p>A simple calculator currently under construction and testing. Styled with CSS and logic done in vanilla Javascript (no libraries). Normally code should be separated in an MVC format for production but since this is just a simple example, all HTML, CSS, and Javascript are in a single HTML file. All buttons are working except 'mode', 'left arrow' (<), 'right arrow' (>), 'squareroot', 'exponent', 'percent', and 'sign' (+/-). Uses postfix (reverse polish) notation to keep track of operator precedence in calculations. More functionality and improved styling will be coming soon.</p>
+</div>
+</div>
+
+
+<!--js scripts-->
+<script>
+/* calculator constructor */
+function Calculator() {
+
+	// private variables
+	var screen = document.getElementById("result");
+	var prevTotal = 0;
+	var prevNum = 0;
+	var lastNum = "";
+	var expressionBuff = [];
+	var currOperator = "";
+	var onScreenExpression = "";
+	var currNum = "";	// the string to append number inputs
+	var maxLength = 16;	// max amount of character allowed on screen
+	var sigfig = 0;		// not yet implemented
+	var beginNum = 0;
+	var dot = false;	// keep track of dots
+	var lastButtonEntered = "";	// keep track of the last button entered before entering an equal("=") sign
+	
+	/**
+	 * output the solution
+	 * solution is solved using operator precedence by converting infix to postfix
+	 */
+	this.solve = function() {
+		// TODO: 
+		// 1) make sure that an operator is not the first element
+		// 2) handle division by zero
+		
+		//var currOp = "";
+		//var isOperator = false;
+		var postfixExpression = [];
+		var onScreenNum = "";
+
+		// if an operator is at the end of the expression, then don't include it in buffer
+		// but if last button pressed (before pressing the equal(=) button) is a number, then include in buffer
+		if(! isNaN(lastButtonEntered)) {
+			expressionBuff.push(lastNum);
+		}
+
+		if(expressionBuff.length < 3) {
+			if(expressionBuff.length == 0) {
+				// perform the operator on the previous total
+				switch(currOperator) {
+						case "+": prevTotal += prevNum; break;
+						case "-": prevTotal -= prevNum; break;
+						case "*": prevTotal *= prevNum; break;
+						case "/": prevTotal /= prevNum; break;
+						default: ;		// should output error message and let user retry
+				}
+			} else {
+				prevNum = parseFloat(expressionBuff[0]);
+				currOperator = expressionBuff[1];
+				if (prevTotal == 0) {
+					prevTotal = prevNum;
+				} else {
+					switch(currOperator) {
+						case "+": prevTotal += prevNum; break;
+						case "-": prevTotal -= prevNum; break;
+						case "*": prevTotal *= prevNum; break;
+						case "/": prevTotal /= prevNum; break;
+						default: ;		// should output error message and let user retry
+					}
+				}
+			}
+		} else {
+
+			// convert infix expression to postfix
+			postfixExpression = toPostfix(expressionBuff);
+
+			// solve postfix expression and store result to memory
+			prevTotal = solvePostfix(postfixExpression);
+		}
+
+		// use this postfix equation to calculate answer
+		console.log("infix expression: " + expressionBuff);
+		console.log("postfix expression: " + postfixExpression);
+
+		// save solution to memory and output to screen
+		if (prevTotal) {
+			onScreenNum = prevTotal.toString();
+			if(onScreenNum.length > maxLength) {
+				outputToScreen(onScreenNum.substr(0, maxLength));	// only output the max amount of number to display
+			} else {
+				outputToScreen(onScreenNum);
+			}
+		} else {
+			window.setTimeout(function(){
+				outputToScreen("0");
+			}, 1000);
+			outputToScreen("NaN");
+		}
+		
+		// reset the current number internally but number is still onscreen
+		onScreenExpression = "";
+		currNum = "";
+		expressionBuff = [];
+
+		lastButtonEntered = "=";	// keep track of the last button entered
+	}
+
+
+	/**
+	 * solve a postfix expression
+	 * numbers that are strings are now converted to floats for numeric calculations
+	 */
+	var solvePostfix = function (postfixExpression) {
+		var expressionStack = [];
+		var token = "";
+		var x, y, total = 0;
+
+		for(var operatorOperand in postfixExpression) {
+			token = postfixExpression[operatorOperand];
+			if((token == "+") ||
+			   (token == "-") ||
+			   (token == "*") ||
+			   (token == "/")) {
+			   	// pop the 2 previous numbers (if any)
+			   	// note that operands have been converted to numbers
+			   	// but operators are still strings
+			   	x = 0; y = 0; total = 0;	// reset variables
+			   	if (expressionStack.length > 0) {
+					if(expressionStack.length > 1) {
+						y = expressionStack.pop();	// note that the second number gets popped first
+						x = expressionStack.pop();
+
+						switch(token) {
+							case "+": total = x + y; break;
+							case "-": total = x - y; break;
+							case "*": total = x * y; break;
+							case "/": total = x / y; break;
+							default: console.log("error in expression stack"); return;
+						}
+						expressionStack.push(total);
+					} else {
+						// case where there is only 1 number in the stack
+						total = expressionStack.pop();
+						switch(token) {
+							case "+": total += total; break;
+							case "-": total -= total; break;
+							case "*": total *= total; break;
+							case "/": total /= total; break;
+							default: console.log("error in expression stack"); return;
+						}
+						expressionStack.push(total);
+					}
+				} else {
+					console.log("error: (" + token + ") should not be the first value");
+				}
+			} else {
+				expressionStack.push(parseFloat(token));
+			}
+		}
+
+		// at this point, there should only be 1 number in the stack. this is the answer
+		return expressionStack.length == 1 ? expressionStack.pop() : null;
+	}
+
+	/**
+	 * a private function that returns a postfix expression from an infix expression
+	 * using a stack to keep track of precedence
+	 */
+	var toPostfix = function(expressionBuff) {
+		// infix -> postfix
+		// ex: 
+		// a + b * c
+		// a + (b * c) 
+		// a + (bc*)
+		// a(bc*)+
+		// abc*+   
+
+		var operatorStack = [];
+		var postfixExpression = [];
+		for(var x in expressionBuff) {
+			var token = expressionBuff[x];	// token can be either an operator or an operand
+			if(isOperator(token)) {
+				// check stack to see if the current token has precedence over the operator on top of the stack
+				// this can be put in a separate function called "testPrecedence()"
+				if(operatorStack.length > 0) {
+					var topOperator = operatorStack.pop();
+
+
+					// operator at top of stack or token is an opening parenthesis
+					if(isOpeningParenthesis(topOperator) || isOpeningParenthesis(token)) {	
+						operatorStack.push(topOperator);
+						operatorStack.push(token);
+					} else {
+						// cases where both the operator ontop the stack and the current token has same precedence  (e.g. + - and * /)
+						// however, the operator ontop the stack has precedence over the current token since it came first
+						// so append that operator from the stack into the postfix expression
+						if ((topOperator == token) ||
+						    (topOperator == "+" && token == "-") ||
+						    (topOperator == "-" && token == "+") ||
+							(topOperator == "*" && token == "/") || 
+							(topOperator == "/" && token == "*")) {
+							postfixExpression.push(topOperator);	// append operator into current postfix expression
+							operatorStack.push(token);	// token is now the operator at the top of the stack
+						} else if ((topOperator == "+" || topOperator == "-") && (token == "*" || token == "/")) {
+							// case where current token has higher precedence than the operator at the top of the stack
+							operatorStack.push(topOperator);
+							operatorStack.push(token);	// the token is now the operator at the top of the stack
+						} else {
+							// at this point, token could be a closing parenthesis
+							// determine if token is a closing parenthesis
+							if(isClosingParenthesis(token)) { 
+								while (operatorStack.length > 0 && !isOpeningParenthesis(topOperator)) {
+									postfixExpression.push(topOperator);
+									topOperator = operatorStack.pop();
+								}
+								
+								if(!isClosingParenthesis(token)) {
+									operatorStack.push(token);
+								}
+							} else {
+								// case where operator from top of stack has HIGHER precedence than the token
+								postfixExpression.push(topOperator);
+
+								// push everything else from the stack into the postfix equation
+								// or until an open parenthesis is found
+								while (operatorStack.length > 0) {
+									postfixExpression.push(operatorStack.pop());
+								}
+								// there is nothing left in the stack, so just push the token with the 
+								// lower precedence into stack (if it is not a closing parenthesis)
+								operatorStack.push(token);
+							}
+						}		
+					}
+				} else {
+					operatorStack.push(token); // nothing was in the stack so just push token into stack
+				}
+			} else {
+				// token is an operand
+				postfixExpression.push(token);
+			}
+		}
+		// any operator left in the stack will be added at the end of the postfix equation
+		while (operatorStack.length > 0) {
+			postfixExpression.push(operatorStack.pop());
+		}
+		return postfixExpression;
+	}
+
+	/**
+	 * private method to determine if a token is an a valid operator
+	 */
+	var isOperator = function(token) {
+		switch(token) {
+			case "+": ;
+			case "-": ;
+			case "*": ;
+			case "/": ;
+			case "(": ;
+			case ")": return true;
+			default: return false;
+		}
+	}
+
+	/**
+	 * private method to determine if the token is an open parethesis
+	 */
+	var isOpeningParenthesis = function(token) {
+		return token == "(" ? true : false;
+	}
+
+	/**
+	 * private method to determine if the token is an closing parethesis
+	 */
+	var isClosingParenthesis = function(token) {
+		return token == ")" ? true : false;
+	}
+	
+	/**
+	 * private method to reset all private variables
+	 */
+	var resetAll = function() {
+		prevTotal = 0;
+		prevNum = 0;
+		expressionBuff = [];
+		currOperator = "";
+		onScreenExpression = "";
+		currNum = "";
+		beginNum = 0;
+		dot = false;	
+		lastButtonEntered = "";
+		sigfig = 0;
+	}
+
+	/**
+	 * clear calculator screen and private variables
+	 */
+	this.clearScreen = function () {
+		resetAll();
+		outputToScreen("0");	
+	}
+
+	/**
+	 * user number and dot inputs
+	 * keeps track of this button when pressed to assist in solving
+	 */
+	this.enterNum = function(num) {
+		// dot cannot be entered more than once
+		if(num == ".") {
+			if (dot) {
+				window.setTimeout(function () { 
+					screen.innerHTML = onScreenExpression;
+					screen.style.textAlign = "right";
+					screen.style.color = "black";
+				}, 1000);	
+
+				// this thread will execute while threat at setTimeout() is executing
+				screen.innerHTML = "error";
+				screen.style.textAlign = "center";
+				screen.style.color = "red";
+				return;
+			} else {
+				dot = true;
+			}
+		}
+
+		// check if an operator was set
+		if(currOperator) {
+			dot = false;		// reset dot so that the next number can use a dot
+			currOperator = "";	// unset operator
+		} 
+
+		onScreenExpression += num;
+		currNum += num;
+		lastNum = currNum;					// keep track of the last number
+		outputToScreen(onScreenExpression);
+		lastButtonEntered = num;	// keep track of the last input
+	}
+
+	/**
+	 * user operator button inputs
+	 * keeps track of this button when pressed to assist in solving
+	 */
+	this.setOperator = function(operator) {
+		var prev = prevTotal.toString();
+		currOperator = operator;			// keep track of the current operator
+
+		// save number and operator into main expression buffer
+		if(lastButtonEntered == "=") {
+			expressionBuff.push(prev);	// put the previous total at the beginning of expression
+			expressionBuff.push(operator);
+			onScreenExpression = prev + operator;
+		} else {
+			if(currNum != "") {	// this occurs if the previous operator entered was a '(' or ')'
+				expressionBuff.push(currNum);	// only push currNum if it was set
+			}
+			expressionBuff.push(operator);
+			onScreenExpression += operator;
+		}
+		currNum = "";	// reset current number
+
+		// output to screen
+		outputToScreen(onScreenExpression);
+		lastButtonEntered = operator;		// keep track of the last button entered
+	}
+
+
+	/**
+	 * private method to output current expression to screen
+	 * a max amount of character can be displayed on the screen at a time
+	 */
+	var outputToScreen = function(currExpression) {
+		if(currExpression.length > maxLength) {
+			screen.innerHTML = currExpression.substr(beginNum++, currExpression.length);
+		} else {
+			screen.innerHTML = currExpression;
+		}
+	}
+
+	/**
+	 * delete last number
+	 */
+	this.deleteLast = function() {		
+		if(lastButtonEntered == "=") {
+			outputToScreen("0");
+		} else {
+			onScreenExpression = onScreenExpression.substr(0, onScreenExpression.length-1);
+			if (onScreenExpression.length == 0) {
+				outputToScreen("0");
+			} else if(onScreenExpression.length > maxLength) {
+				outputToScreen(onScreenExpression.substr(beginNum--, onScreenExpression.length));
+			} else {
+				outputToScreen(onScreenExpression);
+			}
+		}
+	}
+
+	/**
+	 * add or remove number sign (+/-) in front current number (not including zero)
+	 * if positive, no sign is used to prevent confusing with a plus operator
+	 */
+	this.setSign = function() {
+		// TODO:
+		// 1) handle case where a sign operator was set before entering a number
+		var x = parseFloat(currNum);
+
+		if(currNum[0] != "-") {
+			x = 0 - x;	// negate
+			currNum = x.toString();
+			onScreenExpression = onScreenExpression.substr(0, (onScreenExpression.length+1)-currNum.length);			
+		} else {
+			x = x * -1;	// make positive
+			currNum = x.toString();
+			onScreenExpression = onScreenExpression.substr(0, (onScreenExpression.length-1)-currNum.length);
+		}
+		onScreenExpression += currNum;
+		outputToScreen(onScreenExpression);
+	}
+
+	/**
+	 * temporary function to inform user that button functionality will be coming soon
+	 */
+	this.notYetImplemented = function() {
+		var tag = document.getElementById("result");
+		window.setTimeout(function() {
+			if(onScreenExpression != "") {
+				tag.innerHTML = onScreenExpression;
+			} else {
+				tag.innerHTML = "0";
+			}
+			tag.style.textAlign = "right";
+			tag.style.color = "black";
+		}, 500);
+		tag.innerHTML = "coming soon";
+		tag.style.textAlign = "center";
+		tag.style.color = "red";
+	}
+
+
+}
+/* calculator object */
+var calc = new Calculator();
+
+/* assign event listeners to buttons for logic */
+document.getElementById("mode").addEventListener("click", function() { calc.notYetImplemented(); console.log("mode"); });
+document.getElementById("leftArrow").addEventListener("click", function() { calc.notYetImplemented(); console.log("<"); });
+document.getElementById("rightArrow").addEventListener("click", function() { calc.notYetImplemented(); console.log(">"); });
+
+document.getElementById("squareRoot").addEventListener("click", function() { calc.notYetImplemented(); console.log("sqt"); });
+document.getElementById("leftParethesis").addEventListener("click", function() { calc.setOperator("("); console.log("("); });
+document.getElementById("rightParethesis").addEventListener("click", function() { calc.setOperator(")"); console.log(")"); });
+document.getElementById("clear").addEventListener("click", function() { calc.clearScreen(); console.log("C"); });
+
+document.getElementById("exponent").addEventListener("click", function() { calc.notYetImplemented(); console.log("^"); });
+document.getElementById("percent").addEventListener("click", function() { calc.notYetImplemented(); console.log("%"); });
+document.getElementById("delete").addEventListener("click", function() { calc.deleteLast(); console.log("del"); });
+document.getElementById("divide").addEventListener("click", function() { calc.setOperator("/"); console.log("/"); });
+
+document.getElementById("seven").addEventListener("click", function() { calc.enterNum("7"); console.log("7"); });
+document.getElementById("eight").addEventListener("click", function() { calc.enterNum("8"); console.log("8"); });
+document.getElementById("nine").addEventListener("click", function() { calc.enterNum("9"); console.log("9"); });
+document.getElementById("multiply").addEventListener("click", function() { calc.setOperator("*"); console.log("*"); });
+
+document.getElementById("four").addEventListener("click", function() { calc.enterNum("4"); console.log("4"); });
+document.getElementById("five").addEventListener("click", function() { calc.enterNum("5"); console.log("5"); });
+document.getElementById("six").addEventListener("click", function() { calc.enterNum("6"); console.log("6"); });
+document.getElementById("subtract").addEventListener("click", function() { calc.setOperator("-"); console.log("-"); });
+
+document.getElementById("one").addEventListener("click", function() { calc.enterNum("1"); console.log("1"); });
+document.getElementById("two").addEventListener("click", function() { calc.enterNum("2"); console.log("2"); });
+document.getElementById("three").addEventListener("click", function() { calc.enterNum("3"); console.log("3"); });
+document.getElementById("add").addEventListener("click", function() { calc.setOperator("+"); console.log("+"); });
+
+document.getElementById("zero").addEventListener("click", function() { calc.enterNum("0"); console.log("0"); });
+document.getElementById("dot").addEventListener("click", function() { calc.enterNum("."); console.log("."); });
+document.getElementById("sign").addEventListener("click", function() { calc.notYetImplemented(); console.log("+/-"); });
+document.getElementById("equals").addEventListener("click", function() { calc.solve(); console.log("="); });
+
+
+/* assign event listeners for button click effects, these can also be done in css using :active{} */ 
+var allButtons = document.getElementsByClassName("button");
+for(var i = 0; i < allButtons.length; i++) {
+	createButtonPressEvent("click", "mouseup", "mousedown", allButtons[i].id);	
+}
+function createButtonPressEvent(click, mouseup, mousedown, id) {
+	var tag = document.getElementById(id);
+
+	// onclick
+	tag.addEventListener(click, function() { 
+		window.setTimeout(function() {
+			tag.style.backgroundColor = "#d6f5f5"; // blue variant
+			tag.parentElement.style.backgroundColor = "#d6f5f5";
+		}, 50);
+		tag.style.backgroundColor = "#ff4d4d"; // red variant
+		tag.parentElement.style.backgroundColor = "#ff4d4d";
+	});
+
+	// onmouseup
+	tag.addEventListener(mouseup, function() {
+		tag.style.backgroundColor = "#d6f5f5"; // blue variant
+		tag.parentElement.style.backgroundColor = "#d6f5f5";
+	});
+
+	// onmousedown
+	tag.addEventListener(mousedown, function() {
+		tag.style.backgroundColor = "#ff4d4d"; // red variant
+		tag.parentElement.style.backgroundColor = "#ff4d4d";
+	});
+}
+
+</script>
+<body>
+</html>
