@@ -102,7 +102,7 @@
 			float: left;
 		}
 		div#description {
-			width: 325px;
+			width: 50%;
 			float: left;
 			padding: 20px;
 		}
@@ -110,6 +110,12 @@
 </head>
 
 <body>
+
+<div id="description">
+<h1>Simple Calculator</h1>
+<h3>Project Description:</h3>
+<p>A simple web calculator currently under construction and testing. Styled with CSS and logic done in vanilla Javascript (no libraries). Normally code should be separated in an MVC format for production but since this is just a simple example, all HTML, CSS, and Javascript are in a single HTML file. All buttons are working except 'mode', 'left arrow' (<), 'right arrow' (>), 'squareroot', 'exponent', 'percent', and 'sign' (+/-). Internally, it uses postfix (reverse polish) notation to keep track of operator precedence in calculations. More functionality and improved styling will be coming soon.</p>
+</div>
 
 <!-- calculator UI -->
 <div id="calcUI">
@@ -192,15 +198,6 @@
 </tr>
 </table>
 </div>
-
-
-<div id="description">
-<h1>Simple Calculator</h1>
-<h3>Project Description</h3>
-<p>A simple calculator currently under construction and testing. Styled with CSS and logic done in vanilla Javascript (no libraries). Normally code should be separated in an MVC format for production but since this is just a simple example, all HTML, CSS, and Javascript are in a single HTML file. All buttons are working except 'mode', 'left arrow' (<), 'right arrow' (>), 'squareroot', 'exponent', 'percent', and 'sign' (+/-). Uses postfix (reverse polish) notation to keep track of operator precedence in calculations. More functionality and improved styling will be coming soon.</p>
-</div>
-</div>
-
 
 <!--js scripts-->
 <script>
@@ -382,7 +379,6 @@ function Calculator() {
 				// this can be put in a separate function called "testPrecedence()"
 				if(operatorStack.length > 0) {
 					var topOperator = operatorStack.pop();
-
 
 					// operator at top of stack or token is an opening parenthesis
 					if(isOpeningParenthesis(topOperator) || isOpeningParenthesis(token)) {	
@@ -594,6 +590,68 @@ function Calculator() {
 	}
 
 	/**
+	 * function calculate the expresion in front then calculate it's percentage based on
+	 * the last number before the percent sign
+	 */
+	this.solvePercent = function () {
+		var lastOp = "";
+		var subsetExpression = [];
+		var postfix = [];
+		var subsetExpressionSolution = 0;
+		var subsetExpressionPercent = 0;
+		var i = 0;
+		var token = "";
+
+		if(expressionBuff.length > 0) {
+			// save last operator
+			lastOp = expressionBuff.pop();
+
+			// find the innermost opening parenthesis (if any)
+			// only want to solve the inner most expression ( e.g 3*(3+2-2%) -> (3+2)-2% )
+			for (i = expressionBuff.length-1; i >= 0; i--) {
+				token = expressionBuff[i];
+				if(expressionBuff[i] == "(") {
+					break;
+				}
+				subsetExpression.unshift(token);	// push to the front of the array
+			}
+			postfix = toPostfix(subsetExpression);
+			subsetExpressionSolution = solvePostfix(postfix);
+			subsetExpressionPercent = subsetExpressionSolution * toPercent(parseFloat(lastNum));		
+			expressionBuff.push(lastOp);
+			
+			// update onscreen expression
+			onScreenExpression = onScreenExpression.substr(0, onScreenExpression.length-currNum.length);
+			onScreenExpression += subsetExpressionPercent.toString();
+
+			// update the current number
+			currNum = subsetExpressionPercent;
+			lastNum = currNum.toString();
+		} else {
+			// calculate percentage of current number
+			// and save current number and last number
+			currNum = toPercent(parseFloat(currNum));
+			lastNum = currNum;
+
+			// update onscreen expression
+			onScreenExpression = currNum;
+		}
+
+		// output to screen
+		outputToScreen(onScreenExpression);
+		
+		// reset onscreen expression
+		onScreenExpression = "";
+	}
+
+	/**
+	 * private method to convert a number to percentage
+	 */
+	var toPercent = function(num) {
+		return parseFloat(num)/100;
+	}
+
+	/**
 	 * add or remove number sign (+/-) in front current number (not including zero)
 	 * if positive, no sign is used to prevent confusing with a plus operator
 	 */
@@ -619,22 +677,19 @@ function Calculator() {
 	 * temporary function to inform user that button functionality will be coming soon
 	 */
 	this.notYetImplemented = function() {
-		var tag = document.getElementById("result");
 		window.setTimeout(function() {
 			if(onScreenExpression != "") {
-				tag.innerHTML = onScreenExpression;
+				screen.innerHTML = onScreenExpression;
 			} else {
-				tag.innerHTML = "0";
+				screen.innerHTML = "0";
 			}
-			tag.style.textAlign = "right";
-			tag.style.color = "black";
+			screen.style.textAlign = "right";
+			screen.style.color = "black";
 		}, 500);
-		tag.innerHTML = "coming soon";
-		tag.style.textAlign = "center";
-		tag.style.color = "red";
+		screen.innerHTML = "coming soon";
+		screen.style.textAlign = "center";
+		screen.style.color = "red";
 	}
-
-
 }
 /* calculator object */
 var calc = new Calculator();
@@ -650,7 +705,7 @@ document.getElementById("rightParethesis").addEventListener("click", function() 
 document.getElementById("clear").addEventListener("click", function() { calc.clearScreen(); console.log("C"); });
 
 document.getElementById("exponent").addEventListener("click", function() { calc.notYetImplemented(); console.log("^"); });
-document.getElementById("percent").addEventListener("click", function() { calc.notYetImplemented(); console.log("%"); });
+document.getElementById("percent").addEventListener("click", function() { calc.solvePercent(); console.log("%"); });
 document.getElementById("delete").addEventListener("click", function() { calc.deleteLast(); console.log("del"); });
 document.getElementById("divide").addEventListener("click", function() { calc.setOperator("/"); console.log("/"); });
 
