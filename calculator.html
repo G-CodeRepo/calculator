@@ -206,6 +206,8 @@ function Calculator() {
 
 	// private variables
 	var screen = document.getElementById("result");
+	var MAX_LENGTH = 16;	// max amount of character allowed on screen
+	var PRECISION = 2;		// fixed precision (temporary)
 	var prevTotal = 0;
 	var prevNum = 0;
 	var lastNum = "";
@@ -213,8 +215,6 @@ function Calculator() {
 	var currOperator = "";
 	var onScreenExpression = "";
 	var currNum = "";	// the string to append number inputs
-	var maxLength = 16;	// max amount of character allowed on screen
-	var sigfig = 0;		// not yet implemented
 	var beginNum = 0;
 	var dot = false;	// keep track of dots
 	var lastButtonEntered = "";	// keep track of the last button entered before entering an equal("=") sign
@@ -280,8 +280,8 @@ function Calculator() {
 		// save solution to memory and output to screen
 		if (prevTotal) {
 			onScreenNum = prevTotal.toString();
-			if(onScreenNum.length > maxLength) {
-				outputToScreen(onScreenNum.substr(0, maxLength));	// only output the max amount of number to display
+			if(onScreenNum.length > MAX_LENGTH) {
+				outputToScreen(onScreenNum.substr(0, MAX_LENGTH));	// only output the max amount of number to display
 			} else {
 				outputToScreen(onScreenNum);
 			}
@@ -483,7 +483,6 @@ function Calculator() {
 		beginNum = 0;
 		dot = false;	
 		lastButtonEntered = "";
-		sigfig = 0;
 	}
 
 	/**
@@ -539,18 +538,26 @@ function Calculator() {
 		var prev = prevTotal.toString();
 		currOperator = operator;			// keep track of the current operator
 
+
 		// save number and operator into main expression buffer
 		if(lastButtonEntered == "=") {
 			expressionBuff.push(prev);	// put the previous total at the beginning of expression
-			expressionBuff.push(operator);
+			//expressionBuff.push(operator);
 			onScreenExpression = prev + operator;
 		} else {
 			if(currNum != "") {	// this occurs if the previous operator entered was a '(' or ')'
 				expressionBuff.push(currNum);	// only push currNum if it was set
 			}
-			expressionBuff.push(operator);
+			//expressionBuff.push(operator);
 			onScreenExpression += operator;
 		}
+
+		// if the current saved expression ends with an operator, then replace it with the new operator
+		if(isNaN(expressionBuff[expressionBuff.length-1])) {
+			expressionBuff.pop();	// remove the old operator
+		} 
+		expressionBuff.push(operator);
+	
 		currNum = "";	// reset current number
 
 		// output to screen
@@ -564,7 +571,7 @@ function Calculator() {
 	 * a max amount of character can be displayed on the screen at a time
 	 */
 	var outputToScreen = function(currExpression) {
-		if(currExpression.length > maxLength) {
+		if(currExpression.length > MAX_LENGTH) {
 			screen.innerHTML = currExpression.substr(beginNum++, currExpression.length);
 		} else {
 			screen.innerHTML = currExpression;
@@ -581,12 +588,17 @@ function Calculator() {
 			onScreenExpression = onScreenExpression.substr(0, onScreenExpression.length-1);
 			if (onScreenExpression.length == 0) {
 				outputToScreen("0");
-			} else if(onScreenExpression.length > maxLength) {
+			} else if(onScreenExpression.length > MAX_LENGTH) {
 				outputToScreen(onScreenExpression.substr(beginNum--, onScreenExpression.length));
 			} else {
 				outputToScreen(onScreenExpression);
 			}
 		}
+
+		// also make sure that the current and last number is properly trimmed
+		if(currNum != "") { currNum = currNum.substr(0, currNum.length-1); }
+		if(lastNum != "") { lastNum = lastNum.substr(0, lastNum.length-1); }
+	
 	}
 
 	/**
@@ -648,7 +660,7 @@ function Calculator() {
 	 * private method to convert a number to percentage
 	 */
 	var toPercent = function(num) {
-		return parseFloat(num)/100;
+		return (parseFloat(num)/100).toPrecision(PRECISION);
 	}
 
 	/**
