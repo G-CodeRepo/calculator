@@ -114,7 +114,7 @@
 <div id="description">
 <h1>Simple Calculator</h1>
 <h3>Project Description:</h3>
-<p>A simple web calculator currently under construction and testing. Styled with CSS and logic done in vanilla Javascript (no libraries). Normally code should be separated in an MVC format for production but since this is just a simple example, all HTML, CSS, and Javascript are in a single HTML file. All buttons are working except 'mode', 'left arrow' (<), 'right arrow' (>), 'squareroot', 'exponent', and 'sign' (+/-). Internally, it uses postfix (reverse polish) notation to keep track of operator precedence in calculations. More functionality and improved styling will be coming soon.</p>
+<p>A simple web calculator currently under construction and testing. Styled with CSS and logic done in vanilla Javascript (no libraries). Normally code should be separated in an MVC format for production but since this is just a simple example, all HTML, CSS, and Javascript are in a single HTML file. All buttons are working except 'mode', 'left arrow' (<), 'right arrow' (>), 'squareroot', and 'exponent'. Internally, it uses postfix (reverse polish) notation to keep track of operator precedence in calculations. More functionality and improved styling will be coming soon.</p>
 </div>
 
 <!-- calculator UI -->
@@ -151,50 +151,50 @@
 
 <tr>
 <td class="buttonContainer" colspan="2"><button class="button" id="mode">mode</button></td>
-<td class="buttonContainer"><button class="button" id="leftArrow"><</button></td>
-<td class="buttonContainer"><button class="button" id="rightArrow">></button></td>
+<td class="buttonContainer"><button class="button" id="leftArrow">&lt;</button></td>
+<td class="buttonContainer"><button class="button" id="rightArrow">&gt;</button></td>
 </tr>
 
 <tr>
 <td class="buttonContainer"><button class="button" id="squareRoot">sqt</button></td>
-<td class="buttonContainer"><button class="button" id="leftParethesis">(</button></td>
-<td class="buttonContainer"><button class="button" id="rightParethesis">)</button></td>
-<td class="buttonContainer"><button class="button" id="clear">C</button></td>
+<td class="buttonContainer"><button class="button" id="leftParethesis">&#40;</button></td>
+<td class="buttonContainer"><button class="button" id="rightParethesis">&#41;</button></td>
+<td class="buttonContainer"><button class="button" id="clear">&#67;</button></td>
 </tr>
 
 <tr>
-<td class="buttonContainer"><button class="button" id="exponent">^</button></td>
-<td class="buttonContainer"><button class="button" id="percent">%</button></td>
+<td class="buttonContainer"><button class="button" id="exponent">&#94;</button></td>
+<td class="buttonContainer"><button class="button" id="percent">&#37;</button></td>
 <td class="buttonContainer"><button class="button" id="delete">del</button></td>
-<td class="buttonContainer"><button class="button" id="divide">/</button></td>
+<td class="buttonContainer"><button class="button" id="divide">&#47;</button></td>
 </tr>
 
 <tr>
-<td class="buttonContainer"><button class="button" id="seven">7</button></td>
-<td class="buttonContainer"><button class="button" id="eight">8</button></td>
-<td class="buttonContainer"><button class="button" id="nine">9</button></td>
-<td class="buttonContainer"><button class="button" id="multiply">*</button></td>
+<td class="buttonContainer"><button class="button" id="seven">&#55;</button></td>
+<td class="buttonContainer"><button class="button" id="eight">&#56;</button></td>
+<td class="buttonContainer"><button class="button" id="nine">&#57;</button></td>
+<td class="buttonContainer"><button class="button" id="multiply">&#42;</button></td>
 </tr>
 
 <tr>
-<td class="buttonContainer"><button class="button" id="four">4</button></td>
-<td class="buttonContainer"><button class="button" id="five">5</button></td>
-<td class="buttonContainer"><button class="button" id="six">6</button></td>
-<td class="buttonContainer"><button class="button" id="subtract">-</button></td>
+<td class="buttonContainer"><button class="button" id="four">&#52;</button></td>
+<td class="buttonContainer"><button class="button" id="five">&#53;</button></td>
+<td class="buttonContainer"><button class="button" id="six">&#54;</button></td>
+<td class="buttonContainer"><button class="button" id="subtract">&#45;</button></td>
 </tr>
 
 <tr>
-<td class="buttonContainer"><button class="button" id="one">1</button></td>
-<td class="buttonContainer"><button class="button" id="two">2</button></td>
-<td class="buttonContainer"><button class="button" id="three">3</button></td>
-<td class="buttonContainer"><button class="button" id="add">+</button></td>
+<td class="buttonContainer"><button class="button" id="one">&#49;</button></td>
+<td class="buttonContainer"><button class="button" id="two">&#50;</button></td>
+<td class="buttonContainer"><button class="button" id="three">&#51;</button></td>
+<td class="buttonContainer"><button class="button" id="add">&#43;</button></td>
 </tr>
 
 <tr>
-<td class="buttonContainer"><button class="button" id="zero">0</button></td>
-<td class="buttonContainer"><button class="button" id="dot">.</button></td>
-<td class="buttonContainer"><button class="button" id="sign">+/-</button></td>
-<td class="buttonContainer"><button class="button" id="equals">=</button></td>
+<td class="buttonContainer"><button class="button" id="zero">&#48;</button></td>
+<td class="buttonContainer"><button class="button" id="dot">&#46;</button></td>
+<td class="buttonContainer"><button class="button" id="sign">&#43;&#47;&#45;</button></td>
+<td class="buttonContainer"><button class="button" id="equals">&#61;</button></td>
 </tr>
 </table>
 </div>
@@ -264,8 +264,7 @@ function Calculator() {
 					}
 				}
 			}
-		} else {
-
+		} else {					
 			// convert infix expression to postfix
 			postfixExpression = toPostfix(expressionBuff);
 
@@ -349,7 +348,7 @@ function Calculator() {
 					console.log("error: (" + token + ") should not be the first value");
 				}
 			} else {
-				expressionStack.push(parseFloat(token));
+				expressionStack.push(parseFloat(token)); // any number pushed into the expression stack  is a number, NOT a string
 			}
 		}
 
@@ -442,7 +441,7 @@ function Calculator() {
 	}
 
 	/**
-	 * private method to determine if a token is an a valid operator
+	 * private function to determine if a token is an a valid operator
 	 */
 	var isOperator = function(token) {
 		switch(token) {
@@ -457,21 +456,21 @@ function Calculator() {
 	}
 
 	/**
-	 * private method to determine if the token is an open parethesis
+	 * private function to determine if the token is an open parethesis
 	 */
 	var isOpeningParenthesis = function(token) {
 		return token == "(" ? true : false;
 	}
 
 	/**
-	 * private method to determine if the token is an closing parethesis
+	 * private function to determine if the token is an closing parethesis
 	 */
 	var isClosingParenthesis = function(token) {
 		return token == ")" ? true : false;
 	}
 	
 	/**
-	 * private method to reset all private variables
+	 * private function to reset all private variables
 	 */
 	var resetAll = function() {
 		prevTotal = 0;
@@ -522,7 +521,6 @@ function Calculator() {
 			dot = false;		// reset dot so that the next number can use a dot
 			currOperator = "";	// unset operator
 		} 
-
 		onScreenExpression += num;
 		currNum += num;
 		lastNum = currNum;					// keep track of the last number
@@ -538,26 +536,35 @@ function Calculator() {
 		var prev = prevTotal.toString();
 		currOperator = operator;			// keep track of the current operator
 
-
 		// save number and operator into main expression buffer
 		if(lastButtonEntered == "=") {
 			expressionBuff.push(prev);	// put the previous total at the beginning of expression
-			//expressionBuff.push(operator);
 			onScreenExpression = prev + operator;
 		} else {
-			if(currNum != "") {	// this occurs if the previous operator entered was a '(' or ')'
-				expressionBuff.push(currNum);	// only push currNum if it was set
+
+			// if closing operator was the last item in expression 
+			// and a number was used after the closing parenthesis
+			// then treat it as multiplication
+			if(expressionBuff[expressionBuff.length-1] == ")") {
+				if(currNum != "") {	
+					expressionBuff.push("*");
+					onScreenExpression = onScreenExpression.substr(0, (onScreenExpression.length)-lastNum.length);
+					onScreenExpression += "*";
+					onScreenExpression += lastNum;
+				}
 			}
-			//expressionBuff.push(operator);
+
+			if(currNum != "") {	
+				expressionBuff.push(currNum);
+			}
+			// operator is an opening parenthesis but the last item in expression is a number
+			if(operator == "(" && !isNaN(parseFloat(expressionBuff[expressionBuff.length-1]))) {
+				expressionBuff.push("*");
+				onScreenExpression += "*";
+			} 
 			onScreenExpression += operator;
 		}
-
-		// if the current saved expression ends with an operator, then replace it with the new operator
-		if(isNaN(expressionBuff[expressionBuff.length-1])) {
-			expressionBuff.pop();	// remove the old operator
-		} 
-		expressionBuff.push(operator);
-	
+		expressionBuff.push(operator);	
 		currNum = "";	// reset current number
 
 		// output to screen
@@ -567,7 +574,7 @@ function Calculator() {
 
 
 	/**
-	 * private method to output current expression to screen
+	 * private function to output current expression to screen
 	 * a max amount of character can be displayed on the screen at a time
 	 */
 	var outputToScreen = function(currExpression) {
@@ -598,7 +605,6 @@ function Calculator() {
 		// also make sure that the current and last number is properly trimmed
 		if(currNum != "") { currNum = currNum.substr(0, currNum.length-1); }
 		if(lastNum != "") { lastNum = lastNum.substr(0, lastNum.length-1); }
-	
 	}
 
 	/**
@@ -657,7 +663,7 @@ function Calculator() {
 	}
 
 	/**
-	 * private method to convert a number to percentage
+	 * private function to convert a number to percentage
 	 */
 	var toPercent = function(num) {
 		return (parseFloat(num)/100).toPrecision(PRECISION);
@@ -670,19 +676,29 @@ function Calculator() {
 	this.setSign = function() {
 		// TODO:
 		// 1) handle case where a sign operator was set before entering a number
-		var x = parseFloat(currNum);
+		if(currNum != "") {
+			var x = parseFloat(currNum);
+			var prevLength = currNum.length;
 
-		if(currNum[0] != "-") {
-			x = 0 - x;	// negate
-			currNum = x.toString();
-			onScreenExpression = onScreenExpression.substr(0, (onScreenExpression.length+1)-currNum.length);			
-		} else {
-			x = x * -1;	// make positive
-			currNum = x.toString();
-			onScreenExpression = onScreenExpression.substr(0, (onScreenExpression.length-1)-currNum.length);
+			if(x > 0) {
+				x = 0 - x; // negate
+				currNum = x.toString();
+				onScreenExpression = onScreenExpression.substr(0, (onScreenExpression.length+1)-currNum.length);	// truncate
+			} else if(x < 0) {
+				x = x * -1;	// make positive
+				currNum = x.toString();
+				onScreenExpression = onScreenExpression.substr(0, (onScreenExpression.length-1)-currNum.length);	// truncate
+			} else {
+				// number is zero, do nothing
+			}
+
+			if (currNum != "0") {
+				lastNum = currNum;
+				onScreenExpression += currNum;
+				outputToScreen(onScreenExpression);
+			}
 		}
-		onScreenExpression += currNum;
-		outputToScreen(onScreenExpression);
+
 	}
 
 	/**
@@ -738,7 +754,7 @@ document.getElementById("add").addEventListener("click", function() { calc.setOp
 
 document.getElementById("zero").addEventListener("click", function() { calc.enterNum("0"); console.log("0"); });
 document.getElementById("dot").addEventListener("click", function() { calc.enterNum("."); console.log("."); });
-document.getElementById("sign").addEventListener("click", function() { calc.notYetImplemented(); console.log("+/-"); });
+document.getElementById("sign").addEventListener("click", function() { calc.setSign(); console.log("+/-"); });
 document.getElementById("equals").addEventListener("click", function() { calc.solve(); console.log("="); });
 
 
