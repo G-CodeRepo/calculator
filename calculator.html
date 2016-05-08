@@ -641,6 +641,12 @@ function Calculator() {
 		if(lastButtonEntered == "=") {
 			outputToScreen("0");
 		} else {
+			// check if a dot will be deleted so that the dot variable can be reset
+			if(onScreenExpression.substr(onScreenExpression.length-1) == ".") {
+				dot = dot ? false : dot;	// if dot is false, do not change
+			} 
+
+			// remove last character on the screen
 			onScreenExpression = onScreenExpression.substr(0, onScreenExpression.length-1);
 			if (onScreenExpression.length == 0) {
 				outputToScreen("0");
