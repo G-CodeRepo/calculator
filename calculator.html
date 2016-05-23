@@ -586,6 +586,12 @@ function Calculator() {
 			expressionBuff.push(operator);
 			expressionBuff.push("(");
 			onScreenExpression += "(";
+
+			// bug fix when user enters only 1 number between parenthesis in an exponent
+			// 0 + anything should NOT effect the original equation (optionally: 1 * anything also works)
+			// these values will NOT get outputted to screen
+			expressionBuff.push("0");
+			expressionBuff.push("+");
 		} else {
 			expressionBuff.push(operator);
 		}
