@@ -114,7 +114,7 @@
 <div id="description">
 <h1>Simple Calculator</h1>
 <h3>Project Description:</h3>
-<p>A simple web calculator currently under construction and testing. Styled with CSS and logic done in vanilla Javascript (no libraries). Normally code should be separated in an MVC format for production but since this is just a simple example, all HTML, CSS, and Javascript are in a single HTML file. All buttons are working except 'mode', 'left arrow' (<), 'right arrow' (>), and 'squareroot'. Internally, it uses postfix (reverse polish) notation to keep track of operator precedence in calculations. More functionality and improved styling will be coming soon.</p>
+<p>A simple web calculator currently under construction and testing. Styled with CSS and logic done in vanilla Javascript (no libraries). Normally code should be separated in an MVC format for production but since this is just a simple example, all HTML, CSS, and Javascript are in a single HTML file. All buttons are working except 'mode', 'left arrow' (<), and 'right arrow' (>). Internally, it uses postfix (reverse polish) notation to keep track of operator precedence in calculations. More functionality and improved styling will be coming soon.</p>
 </div>
 
 <!-- calculator UI -->
@@ -315,24 +315,32 @@ function Calculator() {
 			   (token == "-") ||
 			   (token == "*") ||
 			   (token == "/") ||
-			   (token == "^")) {
+			   (token == "^") ||
+			   (token == "sqt")) {
 
 			   	// pop the 2 previous numbers (if any)
 			   	// note that operands have been converted to numbers
 			   	// but operators are still strings
+			   	// if the token is a squareroot, pop only the first number
 			   	x = 0; y = 0; total = 0;	// reset variables
 			   	if (expressionStack.length > 0) {
 					if(expressionStack.length > 1) {
-						y = expressionStack.pop();	// note that the second number gets popped first
-						x = expressionStack.pop();
 
-						switch(token) {
-							case "+": total = x + y; break;
-							case "-": total = x - y; break;
-							case "*": total = x * y; break;
-							case "/": total = x / y; break;
-							case "^": total = Math.pow(x, y); break;
-							default: console.log("error in expression stack when length greater than 0"); total = NaN;
+						if(token == "sqt") {
+							x = expressionStack.pop();
+							total = Math.sqrt(x);
+						} else {
+							y = expressionStack.pop();	// note that the second number gets popped first
+							x = expressionStack.pop();
+
+							switch(token) {
+								case "+": total = x + y; break;
+								case "-": total = x - y; break;
+								case "*": total = x * y; break;
+								case "/": total = x / y; break;
+								case "^": total = Math.pow(x, y); break;
+								default: console.log("error in expression stack when length greater than 0"); total = NaN;
+							}
 						}
 						expressionStack.push(total);
 					} else {
@@ -343,6 +351,7 @@ function Calculator() {
 							case "-": total -= total; break;
 							case "*": total *= total; break;
 							case "/": total /= total; break;
+							case "sqt": total = Math.sqrt(total); break;
 							default: console.log("error in expression stack when length is 0"); total = NaN;
 						}
 						expressionStack.push(total);
@@ -398,7 +407,7 @@ function Calculator() {
 							postfixExpression.push(topOperator);	// append operator into current postfix expression
 							operatorStack.push(token);	// token is now the operator at the top of the stack
 						} else if (((topOperator == "+" || topOperator == "-") && (token == "*" || token == "/")) ||
-								 	token == "^") {
+								 	token == "^" || token == "sqt") {
 							// case where current token has higher precedence than the operator at the top of the stack
 							// exponent always has the higher precedennce then the operator ontop the stack
 							operatorStack.push(topOperator);
@@ -462,7 +471,8 @@ function Calculator() {
 			case "/": ;
 			case "(": ;
 			case ")": ;
-			case "^": return true;
+			case "^": ;
+			case "sqt": return true;
 			default: return false;
 		}
 	}
@@ -545,7 +555,9 @@ function Calculator() {
 	 */
 	this.setOperator = function(operator) {
 		var prev = "";
-		if(currNum == "" && lastButtonEntered != ")") {
+		if(operator == "sqt") {
+			// do nothing, squareroot operator is a valid at the beginning
+		} else if (currNum == "" && lastButtonEntered != ")") {
 			errorMessage(onScreenExpression);	// output error message
 			return;
 		} else {
@@ -573,16 +585,16 @@ function Calculator() {
 			if(currNum != "") {	
 				expressionBuff.push(currNum);
 			}
-			// operator is an opening parenthesis but the last item in expression is a number
-			if(operator == "(" && !isNaN(parseFloat(expressionBuff[expressionBuff.length-1]))) {
+			// operator is an opening parenthesis or a squareroot but the last item in expression is a number
+			if((operator == "(" || operator == "sqt") && !isNaN(parseFloat(expressionBuff[expressionBuff.length-1]))) {
 				expressionBuff.push("*");
 				onScreenExpression += "*";
-			} 
+			}
 			onScreenExpression += operator;
 		}
 
-		// if exponent operator is used, put an opening parenthesis after it
-		if(operator == "^") {
+		// if exponent or squareroot operator is used, put an opening parenthesis after it
+		if(operator == "^" || operator == "sqt") {
 			expressionBuff.push(operator);
 			expressionBuff.push("(");
 			onScreenExpression += "(";
@@ -818,7 +830,7 @@ document.getElementById("mode").addEventListener("click", function() { calc.notY
 document.getElementById("leftArrow").addEventListener("click", function() { calc.notYetImplemented(); console.log("<"); });
 document.getElementById("rightArrow").addEventListener("click", function() { calc.notYetImplemented(); console.log(">"); });
 
-document.getElementById("squareRoot").addEventListener("click", function() { calc.notYetImplemented(); console.log("sqt"); });
+document.getElementById("squareRoot").addEventListener("click", function() { calc.setOperator("sqt"); console.log("sqt"); });
 document.getElementById("leftParethesis").addEventListener("click", function() { calc.setOperator("("); console.log("("); });
 document.getElementById("rightParethesis").addEventListener("click", function() { calc.setOperator(")"); console.log(")"); });
 document.getElementById("clear").addEventListener("click", function() { calc.clearScreen(); console.log("C"); });
